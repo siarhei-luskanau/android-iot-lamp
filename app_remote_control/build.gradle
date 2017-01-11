@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.google.gms.google-services'
 
 android {
 
@@ -33,11 +32,10 @@ dependencies {
     def developmentDependencies = rootProject.ext.developmentDependencies
 
     compile project(':domain')
+    compile project(':data_firebase')
 
     compile presentationDependencies.supportDesign
     compile presentationDependencies.supportCardview
-    compile presentationDependencies.firebaseDatabase
-    compile presentationDependencies.glide
 
     //Development
     debugCompile developmentDependencies.leakCanary

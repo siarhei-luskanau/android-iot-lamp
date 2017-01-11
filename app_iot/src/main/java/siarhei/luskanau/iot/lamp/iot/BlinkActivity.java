@@ -32,7 +32,7 @@ public class BlinkActivity extends AppCompatActivity {
 
             switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
 
-            switchCompat.tosetOnClickListener(v -> {
+            switchCompat.setOnClickListener(v -> {
                 boolean isChecked = ((Checkable) v).isChecked();
                 Log.d(TAG, "SwitchCompat setOnClickListener: " + isChecked);
                 FirebaseDatabase database = FirebaseDatabase.getInstance();

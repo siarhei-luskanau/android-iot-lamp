@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
-apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion project.ANDROID_BUILD_SDK_VERSION
@@ -31,9 +30,11 @@ dependencies {
     def iotDependencies = rootProject.ext.iotDependencies
     def developmentDependencies = rootProject.ext.developmentDependencies
 
+    compile project(':domain')
+    compile project(':data_firebase')
+
     provided iotDependencies.androidThings
     compile iotDependencies.supportDesign
-    compile iotDependencies.firebaseDatabase
 
     //Development
     debugCompile developmentDependencies.leakCanary
