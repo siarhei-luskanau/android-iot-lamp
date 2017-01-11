@@ -1,56 +1,74 @@
 package siarhei.luskanau.iot.lamp.remote.control;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
-import android.util.Log;
 import android.widget.Checkable;
+import android.widget.Toast;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import javax.inject.Inject;
 
-public class MainActivity extends AppCompatActivity {
+import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampStatePresenter;
+import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampStateView;
+import siarhei.luskanau.iot.lamp.presenter.send.SendLampStatePresenter;
+import siarhei.luskanau.iot.lamp.presenter.send.SendLampStateView;
+import siarhei.luskanau.iot.lamp.remote.control.dagger.component.DaggerLampComponent;
+import siarhei.luskanau.iot.lamp.remote.control.dagger.component.LampComponent;
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+public class MainActivity extends BaseComponentActivity implements ListenLampStateView, SendLampStateView {
+
+    @Inject
+    protected ListenLampStatePresenter listenLampStatePresenter;
+    @Inject
+    protected SendLampStatePresenter sendLampStatePresenter;
+
     private SwitchCompat switchCompat;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        this.initializeInjector();
+
+        listenLampStatePresenter.setView(this);
+        sendLampStatePresenter.setView(this);
 
         switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
-
         switchCompat.setOnClickListener(v -> {
             boolean isChecked = ((Checkable) v).isChecked();
-            Log.d(TAG, "SwitchCompat setOnClickListener: " + isChecked);
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("message");
-            myRef.setValue(isChecked);
+            sendLampStatePresenter.sendLampState(isChecked);
         });
-
-        readFromDatabase();
     }
 
-    private void readFromDatabase() {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object valueObject = dataSnapshot.getValue();
-                Log.d(TAG, "Value is: " + valueObject);
-                boolean value = Boolean.valueOf(String.valueOf(valueObject));
-                switchCompat.setChecked(value);
-            }
+    private void initializeInjector() {
+        LampComponent lampComponent = DaggerLampComponent.builder()
+                .applicationComponent(getApplicationComponent())
+                .activityModule(getActivityModule())
+                .build();
+        lampComponent.inject(this);
+    }
 
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        listenLampStatePresenter.listenLampState();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        listenLampStatePresenter.destroy();
+        sendLampStatePresenter.destroy();
+    }
+
+    @Override
+    public void showLampState(Boolean lampState) {
+        switchCompat.setChecked(lampState);
+    }
+
+    @Override
+    public void showErrorMessage(CharSequence errorMessage) {
+        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 }

@@ -34,8 +34,14 @@ dependencies {
     compile project(':domain')
     compile project(':data_firebase')
 
+    annotationProcessor presentationDependencies.daggerCompiler
+    compile presentationDependencies.dagger
+    compile presentationDependencies.javaxInject
+
     compile presentationDependencies.supportDesign
     compile presentationDependencies.supportCardview
+
+    compile presentationDependencies.rxAndroid
 
     //Development
     debugCompile developmentDependencies.leakCanary

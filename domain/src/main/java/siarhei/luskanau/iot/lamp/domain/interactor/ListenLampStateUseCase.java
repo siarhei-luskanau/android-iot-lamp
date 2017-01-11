@@ -9,7 +9,7 @@ public class ListenLampStateUseCase extends UseCase<Boolean, Void> {
 
     private final LampRepository lampRepository;
 
-    ListenLampStateUseCase(LampRepository lampRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    public ListenLampStateUseCase(LampRepository lampRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         this.lampRepository = lampRepository;
     }

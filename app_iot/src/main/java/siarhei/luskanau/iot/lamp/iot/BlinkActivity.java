@@ -36,7 +36,7 @@ public class BlinkActivity extends AppCompatActivity {
                 boolean isChecked = ((Checkable) v).isChecked();
                 Log.d(TAG, "SwitchCompat setOnClickListener: " + isChecked);
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference myRef = database.getReference("message");
+                DatabaseReference myRef = database.getReference("lamp");
                 myRef.setValue(isChecked);
             });
         } catch (Exception e) {
@@ -71,7 +71,7 @@ public class BlinkActivity extends AppCompatActivity {
 
     private void readFromDatabase() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
+        DatabaseReference myRef = database.getReference("lamp");
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

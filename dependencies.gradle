@@ -15,6 +15,8 @@ ext {
     PLAY_SERVICES_VERSION = "10.0.1"
 
     //Libraries
+    daggerVersion = '2.8'
+    javaxInjectVersion = '1'
     retrofitVersion = '2.1.1-SNAPSHOT'
     okHttpVersion = '3.5.0'
     gsonVersion = '2.7'
@@ -33,8 +35,12 @@ ext {
     ]
 
     presentationDependencies = [
+            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger         : "com.google.dagger:dagger:${daggerVersion}",
+            javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
             supportDesign  : "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
             supportCardview: "com.android.support:cardview-v7:${SUPPORT_LIBRARY_VERSION}",
+            rxAndroid      : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
     ]
 
     dataFirebaseDependencies = [

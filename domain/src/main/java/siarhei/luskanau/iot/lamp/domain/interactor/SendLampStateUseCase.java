@@ -9,8 +9,8 @@ public class SendLampStateUseCase extends UseCase<Void, SendLampStateUseCase.Par
 
     private final LampRepository lampRepository;
 
-    SendLampStateUseCase(LampRepository lampRepository, ThreadExecutor threadExecutor,
-                         PostExecutionThread postExecutionThread) {
+    public SendLampStateUseCase(LampRepository lampRepository, ThreadExecutor threadExecutor,
+                                PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         this.lampRepository = lampRepository;
     }

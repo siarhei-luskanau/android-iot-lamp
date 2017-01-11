@@ -23,7 +23,7 @@ public class SendLampStatePresenter implements Presenter {
         this.sendLampStateView = view;
     }
 
-    private void sendLampState(Boolean lampState) {
+    public void sendLampState(Boolean lampState) {
         this.sendLampStateUseCase.execute(new SendLampStateObserver(),
                 SendLampStateUseCase.Params.forLampState(lampState));
     }

@@ -23,7 +23,7 @@ public class ListenLampStatePresenter implements Presenter {
         this.listenLampStateView = view;
     }
 
-    private void listenLampState() {
+    public void listenLampState() {
         this.listenLampStateUseCase.execute(new ListenLampStateObserver(), null);
     }
 
