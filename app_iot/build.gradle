@@ -33,6 +33,10 @@ dependencies {
     compile project(':domain')
     compile project(':data_firebase')
 
+    annotationProcessor iotDependencies.daggerCompiler
+    compile iotDependencies.dagger
+    compile iotDependencies.javaxInject
+
     provided iotDependencies.androidThings
     compile iotDependencies.supportDesign
 

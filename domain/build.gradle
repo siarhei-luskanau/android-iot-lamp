@@ -23,10 +23,7 @@ android {
 dependencies {
     def domainDependencies = rootProject.ext.domainDependencies
 
-    annotationProcessor presentationDependencies.daggerCompiler
-    compile presentationDependencies.dagger
-    compile presentationDependencies.javaxInject
-
     compile domainDependencies.rxJava
+    compile domainDependencies.rxAndroid
     compile domainDependencies.supportAnnotations
 }

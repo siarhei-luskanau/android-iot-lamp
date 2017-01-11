@@ -1,7 +1,6 @@
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
 }
 
@@ -17,9 +16,6 @@ ext {
     //Libraries
     daggerVersion = '2.8'
     javaxInjectVersion = '1'
-    retrofitVersion = '2.1.1-SNAPSHOT'
-    okHttpVersion = '3.5.0'
-    gsonVersion = '2.7'
     rxJavaVersion = '2.0.2'
     rxAndroidVersion = '2.0.1'
 
@@ -30,17 +26,18 @@ ext {
     androidthingsVersion = '0.1-devpreview'
 
     iotDependencies = [
+            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger         : "com.google.dagger:dagger:${daggerVersion}",
+            javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
             androidThings: "com.google.android.things:androidthings:${androidthingsVersion}",
             supportDesign: "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
     ]
 
-    presentationDependencies = [
+    remoteControlDependencies = [
             daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger         : "com.google.dagger:dagger:${daggerVersion}",
             javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
             supportDesign  : "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
-            supportCardview: "com.android.support:cardview-v7:${SUPPORT_LIBRARY_VERSION}",
-            rxAndroid      : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
     ]
 
     dataFirebaseDependencies = [
@@ -48,16 +45,9 @@ ext {
     ]
 
     domainDependencies = [
-            supportAnnotations      : "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}",
-            rxJava                  : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
-            rxAndroid               : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
-            gson                    : "com.google.code.gson:gson:${gsonVersion}",
-            retrofit                : "com.squareup.retrofit2:retrofit:${retrofitVersion}",
-            retrofitAdapterRxJava   : "com.squareup.retrofit2:adapter-rxjava2:${retrofitVersion}",
-            retrofitConverterScalars: "com.squareup.retrofit2:converter-scalars:${retrofitVersion}",
-            okHttpLoggingInterceptor: "com.squareup.okhttp3:logging-interceptor:${okHttpVersion}",
-            playServicesLocation    : "com.google.android.gms:play-services-location:${PLAY_SERVICES_VERSION}",
-            playServicesPlaces      : "com.google.android.gms:play-services-places:${PLAY_SERVICES_VERSION}",
+            supportAnnotations: "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}",
+            rxJava            : "io.reactivex.rxjava2:rxjava:${rxJavaVersion}",
+            rxAndroid         : "io.reactivex.rxjava2:rxandroid:${rxAndroidVersion}",
     ]
 
     developmentDependencies = [

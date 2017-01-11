@@ -1,4 +1,4 @@
-package siarhei.luskanau.iot.lamp.remote.control.dagger.modules;
+package siarhei.luskanau.iot.lamp.iot.dagger.modules;
 
 import android.app.Application;
 
@@ -12,7 +12,7 @@ import siarhei.luskanau.iot.lamp.domain.executor.JobExecutor;
 import siarhei.luskanau.iot.lamp.domain.executor.PostExecutionThread;
 import siarhei.luskanau.iot.lamp.domain.executor.ThreadExecutor;
 import siarhei.luskanau.iot.lamp.domain.executor.UIThread;
-import siarhei.luskanau.iot.lamp.remote.control.dagger.scope.ApplicationScope;
+import siarhei.luskanau.iot.lamp.iot.dagger.scope.ApplicationScope;
 
 @Module
 public class ApplicationModule {

@@ -28,20 +28,16 @@ android {
 }
 
 dependencies {
-    def presentationDependencies = rootProject.ext.presentationDependencies
+    def remoteControlDependencies = rootProject.ext.remoteControlDependencies
     def developmentDependencies = rootProject.ext.developmentDependencies
 
     compile project(':domain')
     compile project(':data_firebase')
 
-    annotationProcessor presentationDependencies.daggerCompiler
-    compile presentationDependencies.dagger
-    compile presentationDependencies.javaxInject
-
-    compile presentationDependencies.supportDesign
-    compile presentationDependencies.supportCardview
-
-    compile presentationDependencies.rxAndroid
+    annotationProcessor remoteControlDependencies.daggerCompiler
+    compile remoteControlDependencies.dagger
+    compile remoteControlDependencies.javaxInject
+    compile remoteControlDependencies.supportDesign
 
     //Development
     debugCompile developmentDependencies.leakCanary

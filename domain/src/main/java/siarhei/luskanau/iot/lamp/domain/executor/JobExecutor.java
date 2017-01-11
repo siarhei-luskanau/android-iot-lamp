@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package siarhei.luskanau.iot.lamp.remote.control.executor;
+package siarhei.luskanau.iot.lamp.domain.executor;
 
 import android.support.annotation.NonNull;
 
@@ -21,11 +21,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
-
-import siarhei.luskanau.iot.lamp.domain.executor.ThreadExecutor;
 
 /**
  * Decorated {@link java.util.concurrent.ThreadPoolExecutor}

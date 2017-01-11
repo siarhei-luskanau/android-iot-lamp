@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package siarhei.luskanau.iot.lamp.remote.control.executor;
+package siarhei.luskanau.iot.lamp.domain.executor;
 
 
 import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import siarhei.luskanau.iot.lamp.domain.executor.PostExecutionThread;
 
 /**
  * MainThread (UI Thread) implementation based on a {@link Scheduler}
