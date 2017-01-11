@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.widget.Checkable;
 
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
@@ -28,9 +29,12 @@ public class BlinkActivity extends AppCompatActivity {
 
         try {
             setContentView(R.layout.activity_main);
+
             switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
-            switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                Log.d(TAG, "SwitchCompat setOnCheckedChangeListener: " + isChecked);
+
+            switchCompat.tosetOnClickListener(v -> {
+                boolean isChecked = ((Checkable) v).isChecked();
+                Log.d(TAG, "SwitchCompat setOnClickListener: " + isChecked);
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 DatabaseReference myRef = database.getReference("message");
                 myRef.setValue(isChecked);

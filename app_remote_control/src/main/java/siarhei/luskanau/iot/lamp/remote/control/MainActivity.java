@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.widget.Checkable;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,8 +24,9 @@ public class MainActivity extends AppCompatActivity {
 
         switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
 
-        switchCompat.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            Log.d(TAG, "SwitchCompat setOnCheckedChangeListener: " + isChecked);
+        switchCompat.setOnClickListener(v -> {
+            boolean isChecked = ((Checkable) v).isChecked();
+            Log.d(TAG, "SwitchCompat setOnClickListener: " + isChecked);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference("message");
             myRef.setValue(isChecked);
