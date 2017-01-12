@@ -3,10 +3,10 @@ package siarhei.luskanau.iot.lamp.iot;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
-import android.widget.Checkable;
 import android.widget.Toast;
 
 import com.google.android.things.pio.Gpio;
+import com.google.android.things.pio.GpioCallback;
 import com.google.android.things.pio.PeripheralManagerService;
 
 import java.io.IOException;
@@ -23,14 +23,19 @@ import siarhei.luskanau.iot.lamp.presenter.send.SendLampStateView;
 public class BlinkActivity extends BaseComponentActivity implements ListenLampStateView, SendLampStateView {
 
     private static final String TAG = BlinkActivity.class.getSimpleName();
+    private static final String GPIO_LAMP = "BCM6";
+    private static final String GPIO_BUTTON = "BCM22";
 
     @Inject
     protected ListenLampStatePresenter listenLampStatePresenter;
     @Inject
     protected SendLampStatePresenter sendLampStatePresenter;
 
-    private Gpio mLedGpio;
+    private Gpio lampGpio;
+    private Gpio buttonGpio;
     private SwitchCompat switchCompat;
+    private boolean lampState;
+    private long toggleLastTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +51,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
             setContentView(R.layout.activity_main);
             switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
             switchCompat.setOnClickListener(v -> {
-                boolean isChecked = ((Checkable) v).isChecked();
+                boolean isChecked = switchCompat.isChecked();
                 sendLampStatePresenter.sendLampState(isChecked);
             });
         } catch (Exception e) {
@@ -55,9 +60,32 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
 
         PeripheralManagerService service = new PeripheralManagerService();
         try {
-            String pinName = BoardDefaults.getGPIOForLED();
-            mLedGpio = service.openGpio(pinName);
-            mLedGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
+            buttonGpio = service.openGpio(GPIO_BUTTON);
+            buttonGpio.setDirection(Gpio.DIRECTION_IN);
+            buttonGpio.setEdgeTriggerType(Gpio.EDGE_FALLING);
+            buttonGpio.registerGpioCallback(new GpioCallback() {
+                @Override
+                public boolean onGpioEdge(Gpio gpio) {
+                    long currentTimeMillis = System.currentTimeMillis();
+                    if (currentTimeMillis - toggleLastTime > 200){
+                        toggleLastTime = currentTimeMillis;
+                        Log.i(TAG, "GPIO changed, button pressed");
+                        boolean newLampState = !lampState;
+                        showLampState(newLampState);
+                        sendLampStatePresenter.sendLampState(newLampState);
+                    }
+
+                    // Return true to continue listening to events
+                    return true;
+                }
+            });
+        } catch (IOException e) {
+            Log.e(TAG, "Error on PeripheralIO API", e);
+        }
+
+        try {
+            lampGpio = service.openGpio(GPIO_LAMP);
+            lampGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
             Log.i(TAG, "Start blinking LED GPIO pin");
         } catch (IOException e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
@@ -90,25 +118,39 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "Closing LED GPIO pin");
-        try {
-            mLedGpio.close();
-        } catch (IOException e) {
-            Log.e(TAG, "Error on PeripheralIO API", e);
-        } finally {
-            mLedGpio = null;
+        if (lampGpio != null) {
+            Log.i(TAG, "Closing LED GPIO pin");
+            try {
+                lampGpio.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Error on PeripheralIO API", e);
+            } finally {
+                lampGpio = null;
+            }
+        }
+
+        if (buttonGpio != null) {
+            Log.i(TAG, "Closing Button GPIO pin");
+            try {
+                buttonGpio.close();
+            } catch (IOException e) {
+                Log.e(TAG, "Error on PeripheralIO API", e);
+            } finally {
+                buttonGpio = null;
+            }
         }
     }
 
     @Override
     public void showLampState(Boolean lampState) {
-        try {
-            if (mLedGpio != null) {
-                mLedGpio.setValue(lampState);
+        this.lampState = lampState;
+        if (lampGpio != null) {
+            try {
+                lampGpio.setValue(lampState);
                 Log.d(TAG, "State set to " + lampState);
+            } catch (IOException e) {
+                Log.e(TAG, "Error on PeripheralIO API", e);
             }
-        } catch (IOException e) {
-            Log.e(TAG, "Error on PeripheralIO API", e);
         }
 
         if (switchCompat != null) {
