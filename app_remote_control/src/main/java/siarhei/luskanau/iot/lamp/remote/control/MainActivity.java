@@ -55,8 +55,8 @@ public class MainActivity extends BaseComponentActivity implements ListenLampSta
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
 
         listenLampStatePresenter.destroy();
         sendLampStatePresenter.destroy();
