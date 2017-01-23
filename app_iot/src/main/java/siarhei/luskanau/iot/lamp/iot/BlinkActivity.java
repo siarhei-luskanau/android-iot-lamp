@@ -108,16 +108,12 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
 
         listenLampStatePresenter.destroy();
         sendLampStatePresenter.destroy();
-    }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
         if (lampGpio != null) {
             Log.i(TAG, "Closing LED GPIO pin");
             try {
