@@ -41,6 +41,7 @@ ext {
     ]
 
     dataFirebaseDependencies = [
+            firebaseCore      : "com.google.firebase:firebase-core:${PLAY_SERVICES_VERSION}",
             firebaseDatabase: "com.google.firebase:firebase-database:${PLAY_SERVICES_VERSION}",
     ]
 

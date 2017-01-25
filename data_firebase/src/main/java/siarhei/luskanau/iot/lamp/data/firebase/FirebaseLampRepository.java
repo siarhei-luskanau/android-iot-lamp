@@ -32,7 +32,6 @@ public class FirebaseLampRepository implements LampRepository {
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if (!isDisposed(emitter, this)) {
                         Object valueObject = dataSnapshot.getValue();
-                        Log.d(TAG, "DataSnapshot.getValue: " + valueObject);
                         boolean value = Boolean.valueOf(String.valueOf(valueObject));
                         emitter.onNext(value);
                     }
