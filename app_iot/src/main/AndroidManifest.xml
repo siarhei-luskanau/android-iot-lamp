@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme">
 
-        <!--<uses-library android:name="com.google.android.things" />-->
+        <uses-library android:name="com.google.android.things"/>
 
         <activity android:name=".BlinkActivity">
             <intent-filter>

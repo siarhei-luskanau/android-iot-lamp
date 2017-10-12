@@ -3,10 +3,12 @@ package siarhei.luskanau.iot.lamp.iot;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.widget.Toast;
 
+import com.google.android.things.contrib.driver.button.Button;
+import com.google.android.things.contrib.driver.button.ButtonInputDriver;
 import com.google.android.things.pio.Gpio;
-import com.google.android.things.pio.GpioCallback;
 import com.google.android.things.pio.PeripheralManagerService;
 
 import java.io.IOException;
@@ -32,10 +34,9 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
     protected SendLampStatePresenter sendLampStatePresenter;
 
     private Gpio lampGpio;
-    private Gpio buttonGpio;
+    private ButtonInputDriver buttonInputDriver;
     private SwitchCompat switchCompat;
     private boolean lampState;
-    private long toggleLastTime;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -59,26 +60,11 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
         }
 
         try {
-            final PeripheralManagerService service = new PeripheralManagerService();
-            buttonGpio = service.openGpio(GPIO_BUTTON);
-            buttonGpio.setDirection(Gpio.DIRECTION_IN);
-            buttonGpio.setEdgeTriggerType(Gpio.EDGE_FALLING);
-            buttonGpio.registerGpioCallback(new GpioCallback() {
-                @Override
-                public boolean onGpioEdge(final Gpio gpio) {
-                    final long currentTimeMillis = System.currentTimeMillis();
-                    if (currentTimeMillis - toggleLastTime > 200){
-                        toggleLastTime = currentTimeMillis;
-                        Log.i(TAG, "GPIO changed, button pressed");
-                        final boolean newLampState = !lampState;
-                        showLampState(newLampState);
-                        sendLampStatePresenter.sendLampState(newLampState);
-                    }
-
-                    // Return true to continue listening to events
-                    return true;
-                }
-            });
+            buttonInputDriver = new ButtonInputDriver(
+                    GPIO_BUTTON,
+                    Button.LogicState.PRESSED_WHEN_LOW,
+                    KeyEvent.KEYCODE_SPACE);
+            buttonInputDriver.register();
         } catch (final Throwable e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
         }
@@ -99,6 +85,21 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
                 .activityModule(getActivityModule())
                 .build();
         lampComponent.inject(this);
+    }
+
+    @Override
+    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_SPACE) {
+
+            Log.i(TAG, "GPIO changed, button pressed");
+            final boolean newLampState = !lampState;
+            showLampState(newLampState);
+            sendLampStatePresenter.sendLampState(newLampState);
+
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
@@ -126,14 +127,14 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
             }
         }
 
-        if (buttonGpio != null) {
-            Log.i(TAG, "Closing Button GPIO pin");
+        if (buttonInputDriver != null) {
+            buttonInputDriver.unregister();
             try {
-                buttonGpio.close();
+                buttonInputDriver.close();
             } catch (final IOException e) {
-                Log.e(TAG, "Error on PeripheralIO API", e);
+                Log.e(TAG, "Error closing Button driver", e);
             } finally {
-                buttonGpio = null;
+                buttonInputDriver = null;
             }
         }
     }

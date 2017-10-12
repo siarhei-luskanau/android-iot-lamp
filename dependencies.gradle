@@ -27,24 +27,26 @@ ext {
 
     //Android Things
     androidthingsVersion = '0.5.1-devpreview'
+    driverButtonVersion = '0.4'
 
     iotDependencies = [
-            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
-            dagger         : "com.google.dagger:dagger:${daggerVersion}",
-            javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
-            androidThings: "com.google.android.things:androidthings:${androidthingsVersion}",
-            supportDesign: "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
+            daggerCompiler: "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger        : "com.google.dagger:dagger:${daggerVersion}",
+            javaxInject   : "javax.inject:javax.inject:${javaxInjectVersion}",
+            androidThings : "com.google.android.things:androidthings:${androidthingsVersion}",
+            driverButton  : "com.google.android.things.contrib:driver-button:${driverButtonVersion}",
+            supportDesign : "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
     ]
 
     remoteControlDependencies = [
-            daggerCompiler : "com.google.dagger:dagger-compiler:${daggerVersion}",
-            dagger         : "com.google.dagger:dagger:${daggerVersion}",
-            javaxInject    : "javax.inject:javax.inject:${javaxInjectVersion}",
-            supportDesign  : "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
+            daggerCompiler: "com.google.dagger:dagger-compiler:${daggerVersion}",
+            dagger        : "com.google.dagger:dagger:${daggerVersion}",
+            javaxInject   : "javax.inject:javax.inject:${javaxInjectVersion}",
+            supportDesign : "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
     ]
 
     dataFirebaseDependencies = [
-            firebaseCore      : "com.google.firebase:firebase-core:${PLAY_SERVICES_VERSION}",
+            firebaseCore    : "com.google.firebase:firebase-core:${PLAY_SERVICES_VERSION}",
             firebaseDatabase: "com.google.firebase:firebase-database:${PLAY_SERVICES_VERSION}",
     ]
 
