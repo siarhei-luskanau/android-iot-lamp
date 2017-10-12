@@ -9,25 +9,26 @@ public class SendLampStateUseCase extends UseCase<Void, SendLampStateUseCase.Par
 
     private final LampRepository lampRepository;
 
-    public SendLampStateUseCase(LampRepository lampRepository, ThreadExecutor threadExecutor,
-                                PostExecutionThread postExecutionThread) {
+    public SendLampStateUseCase(final LampRepository lampRepository,
+                                final ThreadExecutor threadExecutor,
+                                final PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         this.lampRepository = lampRepository;
     }
 
     @Override
-    Observable<Void> buildUseCaseObservable(Params params) {
+    Observable<Void> buildUseCaseObservable(final Params params) {
         return this.lampRepository.sendLampState(params.lampState);
     }
 
     public static final class Params {
         private final Boolean lampState;
 
-        private Params(Boolean lampState) {
+        private Params(final Boolean lampState) {
             this.lampState = lampState;
         }
 
-        public static Params forLampState(Boolean lampState) {
+        public static Params forLampState(final Boolean lampState) {
             return new Params(lampState);
         }
     }

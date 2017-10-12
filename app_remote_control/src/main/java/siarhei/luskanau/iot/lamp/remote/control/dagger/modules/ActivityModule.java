@@ -11,7 +11,7 @@ public class ActivityModule {
 
     private final Activity activity;
 
-    public ActivityModule(Activity activity) {
+    public ActivityModule(final Activity activity) {
         this.activity = activity;
     }
 

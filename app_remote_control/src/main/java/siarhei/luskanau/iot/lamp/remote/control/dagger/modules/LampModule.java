@@ -15,21 +15,21 @@ import siarhei.luskanau.iot.lamp.presenter.send.SendLampStatePresenter;
 public class LampModule {
 
     @Provides
-    ListenLampStatePresenter provideListenLampStatePresenter(LampRepository lampRepository,
-                                                             ThreadExecutor threadExecutor,
-                                                             PostExecutionThread postExecutionThread,
-                                                             ErrorMessageFactory errorMessageFactory) {
-        ListenLampStateUseCase listenLampStateUseCase = new ListenLampStateUseCase(lampRepository,
+    ListenLampStatePresenter provideListenLampStatePresenter(final LampRepository lampRepository,
+                                                             final ThreadExecutor threadExecutor,
+                                                             final PostExecutionThread postExecutionThread,
+                                                             final ErrorMessageFactory errorMessageFactory) {
+        final ListenLampStateUseCase listenLampStateUseCase = new ListenLampStateUseCase(lampRepository,
                 threadExecutor, postExecutionThread);
         return new ListenLampStatePresenter(listenLampStateUseCase, errorMessageFactory);
     }
 
     @Provides
-    SendLampStatePresenter provideSendLampStatePresenter(LampRepository lampRepository,
-                                                         ThreadExecutor threadExecutor,
-                                                         PostExecutionThread postExecutionThread,
-                                                         ErrorMessageFactory errorMessageFactory) {
-        SendLampStateUseCase sendLampStateUseCase = new SendLampStateUseCase(lampRepository,
+    SendLampStatePresenter provideSendLampStatePresenter(final LampRepository lampRepository,
+                                                         final ThreadExecutor threadExecutor,
+                                                         final PostExecutionThread postExecutionThread,
+                                                         final ErrorMessageFactory errorMessageFactory) {
+        final SendLampStateUseCase sendLampStateUseCase = new SendLampStateUseCase(lampRepository,
                 threadExecutor, postExecutionThread);
         return new SendLampStatePresenter(sendLampStateUseCase, errorMessageFactory);
     }

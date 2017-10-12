@@ -20,44 +20,45 @@ public class FirebaseLampRepository implements LampRepository {
     private final DatabaseReference lampDatabaseReference;
 
     public FirebaseLampRepository() {
-        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        final FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
         lampDatabaseReference = firebaseDatabase.getReference(LAMP_KEY);
     }
 
     @Override
     public Observable<Boolean> listenLampState() {
-        return Observable.create(emitter -> {
-            lampDatabaseReference.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    if (!isDisposed(emitter, this)) {
-                        Object valueObject = dataSnapshot.getValue();
-                        boolean value = Boolean.valueOf(String.valueOf(valueObject));
-                        emitter.onNext(value);
-                    }
-                }
+        return Observable.create(emitter -> lampDatabaseReference.addValueEventListener(new ValueEventListener() {
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    if (!isDisposed(emitter, this)) {
-                        emitter.onError(error.toException());
-                    }
-                    Log.w(TAG, "Failed to read value.", error.toException());
+            @Override
+            public void onDataChange(final DataSnapshot dataSnapshot) {
+                if (!isDisposed(emitter, this)) {
+                    final Object valueObject = dataSnapshot.getValue();
+                    final boolean value = Boolean.valueOf(String.valueOf(valueObject));
+                    emitter.onNext(value);
                 }
-            });
-        });
+            }
+
+            @Override
+            public void onCancelled(final DatabaseError error) {
+                if (!isDisposed(emitter, this)) {
+                    emitter.onError(error.toException());
+                }
+                Log.w(TAG, "Failed to read value.", error.toException());
+            }
+        }));
     }
 
+    @SuppressWarnings("BooleanParameter")
     @Override
-    public Observable<Void> sendLampState(boolean lampState) {
+    public Observable<Void> sendLampState(final boolean lampState) {
         return Observable.defer(() -> {
             lampDatabaseReference.setValue(lampState);
             return Observable.empty();
         });
     }
 
-    private boolean isDisposed(ObservableEmitter emitter, ValueEventListener valueEventListener) {
-        boolean isDisposed = emitter.isDisposed();
+    @SuppressWarnings("MethodOnlyUsedFromInnerClass")
+    private boolean isDisposed(final ObservableEmitter emitter, final ValueEventListener valueEventListener) {
+        final boolean isDisposed = emitter.isDisposed();
         if (isDisposed) {
             lampDatabaseReference.removeEventListener(valueEventListener);
         }

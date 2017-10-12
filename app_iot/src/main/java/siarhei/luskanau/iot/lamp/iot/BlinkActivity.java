@@ -38,7 +38,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
     private long toggleLastTime;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Log.i(TAG, "Starting BlinkActivity");
@@ -49,28 +49,28 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
 
         try {
             setContentView(R.layout.activity_main);
-            switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
+            switchCompat = findViewById(R.id.switchCompat);
             switchCompat.setOnClickListener(v -> {
-                boolean isChecked = switchCompat.isChecked();
+                final boolean isChecked = switchCompat.isChecked();
                 sendLampStatePresenter.sendLampState(isChecked);
             });
-        } catch (Exception e) {
+        } catch (final Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
 
-        PeripheralManagerService service = new PeripheralManagerService();
         try {
+            final PeripheralManagerService service = new PeripheralManagerService();
             buttonGpio = service.openGpio(GPIO_BUTTON);
             buttonGpio.setDirection(Gpio.DIRECTION_IN);
             buttonGpio.setEdgeTriggerType(Gpio.EDGE_FALLING);
             buttonGpio.registerGpioCallback(new GpioCallback() {
                 @Override
-                public boolean onGpioEdge(Gpio gpio) {
-                    long currentTimeMillis = System.currentTimeMillis();
+                public boolean onGpioEdge(final Gpio gpio) {
+                    final long currentTimeMillis = System.currentTimeMillis();
                     if (currentTimeMillis - toggleLastTime > 200){
                         toggleLastTime = currentTimeMillis;
                         Log.i(TAG, "GPIO changed, button pressed");
-                        boolean newLampState = !lampState;
+                        final boolean newLampState = !lampState;
                         showLampState(newLampState);
                         sendLampStatePresenter.sendLampState(newLampState);
                     }
@@ -79,21 +79,22 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
                     return true;
                 }
             });
-        } catch (IOException e) {
+        } catch (final Throwable e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
         }
 
         try {
+            final PeripheralManagerService service = new PeripheralManagerService();
             lampGpio = service.openGpio(GPIO_LAMP);
             lampGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
             Log.i(TAG, "Start blinking LED GPIO pin");
-        } catch (IOException e) {
+        } catch (final Throwable e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
         }
     }
 
     private void initializeInjector() {
-        LampComponent lampComponent = DaggerLampComponent.builder()
+        final LampComponent lampComponent = DaggerLampComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .activityModule(getActivityModule())
                 .build();
@@ -118,7 +119,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
             Log.i(TAG, "Closing LED GPIO pin");
             try {
                 lampGpio.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Log.e(TAG, "Error on PeripheralIO API", e);
             } finally {
                 lampGpio = null;
@@ -129,7 +130,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
             Log.i(TAG, "Closing Button GPIO pin");
             try {
                 buttonGpio.close();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Log.e(TAG, "Error on PeripheralIO API", e);
             } finally {
                 buttonGpio = null;
@@ -138,13 +139,13 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
     }
 
     @Override
-    public void showLampState(Boolean lampState) {
+    public void showLampState(final Boolean lampState) {
         this.lampState = lampState;
         if (lampGpio != null) {
             try {
                 lampGpio.setValue(lampState);
                 Log.d(TAG, "State set to " + lampState);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 Log.e(TAG, "Error on PeripheralIO API", e);
             }
         }
@@ -155,7 +156,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampSt
     }
 
     @Override
-    public void showErrorMessage(CharSequence errorMessage) {
+    public void showErrorMessage(final CharSequence errorMessage) {
         Log.e(TAG, "showErrorMessage: " + errorMessage);
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }

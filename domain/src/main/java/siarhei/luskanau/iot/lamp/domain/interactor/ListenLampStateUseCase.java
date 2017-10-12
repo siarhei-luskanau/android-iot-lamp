@@ -9,13 +9,15 @@ public class ListenLampStateUseCase extends UseCase<Boolean, Void> {
 
     private final LampRepository lampRepository;
 
-    public ListenLampStateUseCase(LampRepository lampRepository, ThreadExecutor threadExecutor, PostExecutionThread postExecutionThread) {
+    public ListenLampStateUseCase(final LampRepository lampRepository,
+                                  final ThreadExecutor threadExecutor,
+                                  final PostExecutionThread postExecutionThread) {
         super(threadExecutor, postExecutionThread);
         this.lampRepository = lampRepository;
     }
 
     @Override
-    Observable<Boolean> buildUseCaseObservable(Void unused) {
+    Observable<Boolean> buildUseCaseObservable(final Void unused) {
         return this.lampRepository.listenLampState();
     }
 }

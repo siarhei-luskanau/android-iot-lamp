@@ -24,7 +24,7 @@ public class MainActivity extends BaseComponentActivity implements ListenLampSta
     private SwitchCompat switchCompat;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.initializeInjector();
@@ -32,15 +32,15 @@ public class MainActivity extends BaseComponentActivity implements ListenLampSta
         listenLampStatePresenter.setView(this);
         sendLampStatePresenter.setView(this);
 
-        switchCompat = (SwitchCompat) findViewById(R.id.switchCompat);
+        switchCompat = findViewById(R.id.switchCompat);
         switchCompat.setOnClickListener(v -> {
-            boolean isChecked = ((Checkable) v).isChecked();
+            final boolean isChecked = ((Checkable) v).isChecked();
             sendLampStatePresenter.sendLampState(isChecked);
         });
     }
 
     private void initializeInjector() {
-        LampComponent lampComponent = DaggerLampComponent.builder()
+        final LampComponent lampComponent = DaggerLampComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .activityModule(getActivityModule())
                 .build();
@@ -63,12 +63,12 @@ public class MainActivity extends BaseComponentActivity implements ListenLampSta
     }
 
     @Override
-    public void showLampState(Boolean lampState) {
+    public void showLampState(final Boolean lampState) {
         switchCompat.setChecked(lampState);
     }
 
     @Override
-    public void showErrorMessage(CharSequence errorMessage) {
+    public void showErrorMessage(final CharSequence errorMessage) {
         Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 }

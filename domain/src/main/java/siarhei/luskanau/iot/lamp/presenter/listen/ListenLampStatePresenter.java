@@ -13,13 +13,13 @@ public class ListenLampStatePresenter implements Presenter {
     private final ErrorMessageFactory errorMessageFactory;
     private ListenLampStateView listenLampStateView;
 
-    public ListenLampStatePresenter(ListenLampStateUseCase listenLampStateUseCase,
-                                    ErrorMessageFactory errorMessageFactory) {
+    public ListenLampStatePresenter(final ListenLampStateUseCase listenLampStateUseCase,
+                                    final ErrorMessageFactory errorMessageFactory) {
         this.listenLampStateUseCase = listenLampStateUseCase;
         this.errorMessageFactory = errorMessageFactory;
     }
 
-    public void setView(@NonNull ListenLampStateView view) {
+    public void setView(@NonNull final ListenLampStateView view) {
         this.listenLampStateView = view;
     }
 
@@ -43,13 +43,13 @@ public class ListenLampStatePresenter implements Presenter {
 
     private final class ListenLampStateObserver extends DefaultObserver<Boolean> {
         @Override
-        public void onError(Throwable e) {
-            CharSequence errorMessage = errorMessageFactory.create(e);
+        public void onError(final Throwable e) {
+            final CharSequence errorMessage = errorMessageFactory.create(e);
             ListenLampStatePresenter.this.listenLampStateView.showErrorMessage(errorMessage);
         }
 
         @Override
-        public void onNext(Boolean lampState) {
+        public void onNext(final Boolean lampState) {
             ListenLampStatePresenter.this.listenLampStateView.showLampState(lampState);
         }
     }
