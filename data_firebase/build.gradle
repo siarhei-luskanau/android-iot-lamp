@@ -25,9 +25,10 @@ dependencies {
 
     compile project(':domain')
 
-    compile dataFirebaseDependencies.firebaseCore
     compile dataFirebaseDependencies.firebaseDatabase
+    compile dataFirebaseDependencies.rx2firebase
 }
 
 // ADD THIS AT THE BOTTOM
- apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'
+
