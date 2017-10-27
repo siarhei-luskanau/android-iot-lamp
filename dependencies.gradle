@@ -1,7 +1,7 @@
 allprojects {
     repositories {
+        google()
         jcenter()
-        maven { url "https://maven.google.com" }
         maven { url "https://jitpack.io" }
     }
 }
@@ -28,14 +28,16 @@ ext {
     //Android Things
     androidthingsVersion = '0.5.1-devpreview'
     driverButtonVersion = '0.4'
+    pwmservoVersion = '0.3'
 
     iotDependencies = [
             daggerCompiler: "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger        : "com.google.dagger:dagger:${daggerVersion}",
             javaxInject   : "javax.inject:javax.inject:${javaxInjectVersion}",
             androidThings : "com.google.android.things:androidthings:${androidthingsVersion}",
-            driverButton  : "com.google.android.things.contrib:driver-button:${driverButtonVersion}",
             supportDesign : "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
+            driverButton  : "com.google.android.things.contrib:driver-button:${driverButtonVersion}",
+            driverPwmServo: "com.google.android.things.contrib:driver-pwmservo:${pwmservoVersion}",
     ]
 
     remoteControlDependencies = [
