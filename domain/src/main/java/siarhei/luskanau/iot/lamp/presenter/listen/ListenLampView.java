@@ -4,5 +4,7 @@ public interface ListenLampView {
 
     void showLampState(Boolean lampState);
 
+    void showLampProgress(Double lampProgress);
+
     void showErrorMessage(CharSequence errorMessage);
 }

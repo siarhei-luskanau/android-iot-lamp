@@ -10,8 +10,10 @@ import com.google.android.things.contrib.driver.button.Button;
 import com.google.android.things.contrib.driver.button.ButtonInputDriver;
 import com.google.android.things.pio.Gpio;
 import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.Pwm;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -27,6 +29,9 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
     private static final String TAG = BlinkActivity.class.getSimpleName();
     private static final String GPIO_LAMP = "BCM6";
     private static final String GPIO_BUTTON = "BCM22";
+    private static final String GPIO_PWM = "PWM0";
+    private static final double MIN_ACTIVE_PULSE_DURATION_MS = 3;
+    private static final double PULSE_PERIOD_MS = 20;  // Frequency of 50Hz (1000/20)
 
     @Inject
     protected ListenLampPresenter listenLampStatePresenter;
@@ -35,6 +40,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
 
     private Gpio lampGpio;
     private ButtonInputDriver buttonInputDriver;
+    private Pwm pwm;
     private SwitchCompat switchCompat;
     private boolean lampState;
 
@@ -77,6 +83,17 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
         } catch (final Throwable e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
         }
+
+        try {
+            final PeripheralManagerService service = new PeripheralManagerService();
+            pwm = service.openPwm(GPIO_PWM);
+            // Always set frequency and initial duty cycle before enabling PWM
+            pwm.setPwmFrequencyHz(1000 / PULSE_PERIOD_MS);
+            showLampProgress(0.5);
+            pwm.setEnabled(true);
+        } catch (final Throwable e) {
+            Log.e(TAG, "Error on PeripheralIO API", e);
+        }
     }
 
     private void initializeInjector() {
@@ -107,6 +124,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
         super.onResume();
 
         listenLampStatePresenter.listenLampState();
+        listenLampStatePresenter.listenLampProgress();
     }
 
     @Override
@@ -115,6 +133,17 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
 
         listenLampStatePresenter.destroy();
         sendLampStatePresenter.destroy();
+
+        if (pwm != null) {
+            Log.i(TAG, "Closing Pwm GPIO pin");
+            try {
+                pwm.close();
+            } catch (final IOException e) {
+                Log.e(TAG, "Error on PeripheralIO API", e);
+            } finally {
+                pwm = null;
+            }
+        }
 
         if (lampGpio != null) {
             Log.i(TAG, "Closing LED GPIO pin");
@@ -153,6 +182,20 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
 
         if (switchCompat != null) {
             switchCompat.setChecked(lampState);
+        }
+    }
+
+    @Override
+    public void showLampProgress(final Double lampProgress) {
+        if (pwm != null && lampProgress != null) {
+            try {
+                final double pwmDutyCycle = MIN_ACTIVE_PULSE_DURATION_MS +
+                        lampProgress * (PULSE_PERIOD_MS / 2 - MIN_ACTIVE_PULSE_DURATION_MS);
+                pwm.setPwmDutyCycle(pwmDutyCycle);
+                Log.d(TAG, String.format(Locale.ENGLISH, "Pwm:  Progress=%s  PwmDutyCycle=%s", lampProgress, pwmDutyCycle));
+            } catch (final IOException e) {
+                Log.e(TAG, "Error on PeripheralIO API", e);
+            }
         }
     }
 

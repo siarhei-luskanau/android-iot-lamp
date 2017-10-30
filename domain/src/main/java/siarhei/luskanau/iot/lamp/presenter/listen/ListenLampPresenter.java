@@ -38,7 +38,7 @@ public class ListenLampPresenter implements Presenter {
     }
 
     public void listenLampProgress() {
-        this.listenLampProgressUseCase.execute(new DefaultObserver<>(), null);
+        this.listenLampProgressUseCase.execute(new ListenLampProgressObserver(), null);
     }
 
     public void listenLampMessage() {
@@ -70,6 +70,20 @@ public class ListenLampPresenter implements Presenter {
         @Override
         public void onNext(final Boolean lampState) {
             ListenLampPresenter.this.listenLampStateView.showLampState(lampState);
+        }
+    }
+
+    private final class ListenLampProgressObserver extends DefaultObserver<Double> {
+
+        @Override
+        public void onError(final Throwable e) {
+            final CharSequence errorMessage = errorMessageFactory.create(e);
+            ListenLampPresenter.this.listenLampStateView.showErrorMessage(errorMessage);
+        }
+
+        @Override
+        public void onNext(final Double lampProgress) {
+            ListenLampPresenter.this.listenLampStateView.showLampProgress(lampProgress);
         }
     }
 }

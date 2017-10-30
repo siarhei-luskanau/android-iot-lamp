@@ -75,6 +75,7 @@ public class MainActivity extends BaseComponentActivity implements ListenLampVie
         super.onResume();
 
         listenLampStatePresenter.listenLampState();
+        listenLampStatePresenter.listenLampProgress();
     }
 
     @Override
@@ -88,6 +89,13 @@ public class MainActivity extends BaseComponentActivity implements ListenLampVie
     @Override
     public void showLampState(final Boolean lampState) {
         switchCompat.setChecked(lampState);
+    }
+
+    @Override
+    public void showLampProgress(final Double lampProgress) {
+        if (seekBar != null && lampProgress != null) {
+            seekBar.setProgress((int) (lampProgress * seekBar.getMax()));
+        }
     }
 
     @Override
