@@ -1,6 +1,6 @@
 package siarhei.luskanau.iot.lamp.presenter.listen;
 
-public interface ListenLampStateView {
+public interface ListenLampView {
 
     void showLampState(Boolean lampState);
 

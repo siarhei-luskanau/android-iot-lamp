@@ -3,25 +3,27 @@ package siarhei.luskanau.iot.lamp.remote.control;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.widget.Checkable;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import javax.inject.Inject;
 
-import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampStatePresenter;
-import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampStateView;
-import siarhei.luskanau.iot.lamp.presenter.send.SendLampStatePresenter;
-import siarhei.luskanau.iot.lamp.presenter.send.SendLampStateView;
+import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampPresenter;
+import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampView;
+import siarhei.luskanau.iot.lamp.presenter.send.SendLampPresenter;
+import siarhei.luskanau.iot.lamp.presenter.send.SendLampView;
 import siarhei.luskanau.iot.lamp.remote.control.dagger.component.DaggerLampComponent;
 import siarhei.luskanau.iot.lamp.remote.control.dagger.component.LampComponent;
 
-public class MainActivity extends BaseComponentActivity implements ListenLampStateView, SendLampStateView {
+public class MainActivity extends BaseComponentActivity implements ListenLampView, SendLampView {
 
     @Inject
-    protected ListenLampStatePresenter listenLampStatePresenter;
+    protected ListenLampPresenter listenLampStatePresenter;
     @Inject
-    protected SendLampStatePresenter sendLampStatePresenter;
+    protected SendLampPresenter sendLampPresenter;
 
     private SwitchCompat switchCompat;
+    private SeekBar seekBar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -30,12 +32,33 @@ public class MainActivity extends BaseComponentActivity implements ListenLampSta
         this.initializeInjector();
 
         listenLampStatePresenter.setView(this);
-        sendLampStatePresenter.setView(this);
+        sendLampPresenter.setView(this);
 
         switchCompat = findViewById(R.id.switchCompat);
         switchCompat.setOnClickListener(v -> {
             final boolean isChecked = ((Checkable) v).isChecked();
-            sendLampStatePresenter.sendLampState(isChecked);
+            sendLampPresenter.sendLampState(isChecked);
+        });
+
+        seekBar = findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+            @Override
+            public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
+                if (fromUser) {
+                    sendLampPresenter.sendLampProgress((double) progress / seekBar.getMax());
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(final SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(final SeekBar seekBar) {
+
+            }
         });
     }
 
@@ -59,7 +82,7 @@ public class MainActivity extends BaseComponentActivity implements ListenLampSta
         super.onDestroy();
 
         listenLampStatePresenter.destroy();
-        sendLampStatePresenter.destroy();
+        sendLampPresenter.destroy();
     }
 
     @Override

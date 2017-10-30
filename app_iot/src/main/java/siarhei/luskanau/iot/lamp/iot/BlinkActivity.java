@@ -17,21 +17,21 @@ import javax.inject.Inject;
 
 import siarhei.luskanau.iot.lamp.iot.dagger.component.DaggerLampComponent;
 import siarhei.luskanau.iot.lamp.iot.dagger.component.LampComponent;
-import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampStatePresenter;
-import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampStateView;
-import siarhei.luskanau.iot.lamp.presenter.send.SendLampStatePresenter;
-import siarhei.luskanau.iot.lamp.presenter.send.SendLampStateView;
+import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampPresenter;
+import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampView;
+import siarhei.luskanau.iot.lamp.presenter.send.SendLampPresenter;
+import siarhei.luskanau.iot.lamp.presenter.send.SendLampView;
 
-public class BlinkActivity extends BaseComponentActivity implements ListenLampStateView, SendLampStateView {
+public class BlinkActivity extends BaseComponentActivity implements ListenLampView, SendLampView {
 
     private static final String TAG = BlinkActivity.class.getSimpleName();
     private static final String GPIO_LAMP = "BCM6";
     private static final String GPIO_BUTTON = "BCM22";
 
     @Inject
-    protected ListenLampStatePresenter listenLampStatePresenter;
+    protected ListenLampPresenter listenLampStatePresenter;
     @Inject
-    protected SendLampStatePresenter sendLampStatePresenter;
+    protected SendLampPresenter sendLampStatePresenter;
 
     private Gpio lampGpio;
     private ButtonInputDriver buttonInputDriver;
