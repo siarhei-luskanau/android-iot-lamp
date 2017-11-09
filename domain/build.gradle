@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'com.jakewharton.butterknife'
 
 android {
     compileSdkVersion project.ANDROID_BUILD_SDK_VERSION
@@ -22,7 +23,11 @@ android {
 dependencies {
     def domainDependencies = rootProject.ext.domainDependencies
 
+    compile domainDependencies.butterknife
+    annotationProcessor domainDependencies.butterknifeCompiler
+
     compile domainDependencies.rxJava
     compile domainDependencies.rxAndroid
     compile domainDependencies.supportAnnotations
+    compile domainDependencies.supportDesign
 }

@@ -7,7 +7,7 @@ android {
     defaultConfig {
         applicationId "siarhei.luskanau.iot.lamp.iot"
         minSdkVersion 24
-        targetSdkVersion 26
+        targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
     }
@@ -37,7 +37,6 @@ dependencies {
     compile iotDependencies.javaxInject
 
     provided iotDependencies.androidThings
-    compile iotDependencies.supportDesign
     compile iotDependencies.driverButton
     compile iotDependencies.driverPwmServo
 

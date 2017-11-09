@@ -1,29 +1,21 @@
 package siarhei.luskanau.iot.lamp.remote.control;
 
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
-import android.widget.Checkable;
-import android.widget.SeekBar;
-import android.widget.Toast;
 
 import javax.inject.Inject;
 
 import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampPresenter;
-import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampView;
 import siarhei.luskanau.iot.lamp.presenter.send.SendLampPresenter;
-import siarhei.luskanau.iot.lamp.presenter.send.SendLampView;
 import siarhei.luskanau.iot.lamp.remote.control.dagger.component.DaggerLampComponent;
 import siarhei.luskanau.iot.lamp.remote.control.dagger.component.LampComponent;
+import siarhei.luskanau.iot.lamp.view.SimpleLampView;
 
-public class MainActivity extends BaseComponentActivity implements ListenLampView, SendLampView {
+public class MainActivity extends BaseComponentActivity {
 
     @Inject
-    protected ListenLampPresenter listenLampStatePresenter;
+    protected ListenLampPresenter listenLampPresenter;
     @Inject
     protected SendLampPresenter sendLampPresenter;
-
-    private SwitchCompat switchCompat;
-    private SeekBar seekBar;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -31,35 +23,13 @@ public class MainActivity extends BaseComponentActivity implements ListenLampVie
         setContentView(R.layout.activity_main);
         this.initializeInjector();
 
-        listenLampStatePresenter.setView(this);
-        sendLampPresenter.setView(this);
+        final SimpleLampView simpleLampView = findViewById(R.id.simpleLampView);
 
-        switchCompat = findViewById(R.id.switchCompat);
-        switchCompat.setOnClickListener(v -> {
-            final boolean isChecked = ((Checkable) v).isChecked();
-            sendLampPresenter.sendLampState(isChecked);
-        });
+        listenLampPresenter.setView(simpleLampView);
+        sendLampPresenter.setView(simpleLampView);
 
-        seekBar = findViewById(R.id.seekBar);
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-
-            @Override
-            public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
-                if (fromUser) {
-                    sendLampPresenter.sendLampProgress((double) progress / seekBar.getMax());
-                }
-            }
-
-            @Override
-            public void onStartTrackingTouch(final SeekBar seekBar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(final SeekBar seekBar) {
-
-            }
-        });
+        simpleLampView.setOnLampStateChangeListener(lampState -> sendLampPresenter.sendLampState(lampState));
+        simpleLampView.setOnLampProgressChangeListener(lampProgress -> sendLampPresenter.sendLampProgress(lampProgress));
     }
 
     private void initializeInjector() {
@@ -74,32 +44,15 @@ public class MainActivity extends BaseComponentActivity implements ListenLampVie
     protected void onResume() {
         super.onResume();
 
-        listenLampStatePresenter.listenLampState();
-        listenLampStatePresenter.listenLampProgress();
+        listenLampPresenter.listenLampState();
+        listenLampPresenter.listenLampProgress();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
 
-        listenLampStatePresenter.destroy();
+        listenLampPresenter.destroy();
         sendLampPresenter.destroy();
-    }
-
-    @Override
-    public void showLampState(final Boolean lampState) {
-        switchCompat.setChecked(lampState);
-    }
-
-    @Override
-    public void showLampProgress(final Double lampProgress) {
-        if (seekBar != null && lampProgress != null) {
-            seekBar.setProgress((int) (lampProgress * seekBar.getMax()));
-        }
-    }
-
-    @Override
-    public void showErrorMessage(final CharSequence errorMessage) {
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
     }
 }

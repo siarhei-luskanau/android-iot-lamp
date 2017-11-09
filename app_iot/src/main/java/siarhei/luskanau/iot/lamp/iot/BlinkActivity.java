@@ -1,10 +1,8 @@
 package siarhei.luskanau.iot.lamp.iot;
 
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.widget.Toast;
 
 import com.google.android.things.contrib.driver.button.Button;
 import com.google.android.things.contrib.driver.button.ButtonInputDriver;
@@ -13,18 +11,16 @@ import com.google.android.things.pio.PeripheralManagerService;
 import com.google.android.things.pio.Pwm;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
 import siarhei.luskanau.iot.lamp.iot.dagger.component.DaggerLampComponent;
 import siarhei.luskanau.iot.lamp.iot.dagger.component.LampComponent;
 import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampPresenter;
-import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampView;
 import siarhei.luskanau.iot.lamp.presenter.send.SendLampPresenter;
-import siarhei.luskanau.iot.lamp.presenter.send.SendLampView;
+import siarhei.luskanau.iot.lamp.view.SimpleLampView;
 
-public class BlinkActivity extends BaseComponentActivity implements ListenLampView, SendLampView {
+public class BlinkActivity extends BaseComponentActivity {
 
     private static final String TAG = BlinkActivity.class.getSimpleName();
     private static final String GPIO_LAMP = "BCM6";
@@ -34,14 +30,13 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
     private static final double PULSE_PERIOD_MS = 20;  // Frequency of 50Hz (1000/20)
 
     @Inject
-    protected ListenLampPresenter listenLampStatePresenter;
+    protected ListenLampPresenter listenLampPresenter;
     @Inject
-    protected SendLampPresenter sendLampStatePresenter;
+    protected SendLampPresenter sendLampPresenter;
 
     private Gpio lampGpio;
     private ButtonInputDriver buttonInputDriver;
     private Pwm pwm;
-    private SwitchCompat switchCompat;
     private boolean lampState;
 
     @Override
@@ -51,16 +46,17 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
         Log.i(TAG, "Starting BlinkActivity");
         this.initializeInjector();
 
-        listenLampStatePresenter.setView(this);
-        sendLampStatePresenter.setView(this);
-
         try {
             setContentView(R.layout.activity_main);
-            switchCompat = findViewById(R.id.switchCompat);
-            switchCompat.setOnClickListener(v -> {
-                final boolean isChecked = switchCompat.isChecked();
-                sendLampStatePresenter.sendLampState(isChecked);
-            });
+
+            final SimpleLampView simpleLampView = findViewById(R.id.simpleLampView);
+
+            listenLampPresenter.setView(simpleLampView);
+            sendLampPresenter.setView(simpleLampView);
+
+            simpleLampView.setOnLampStateChangeListener(lampState -> sendLampPresenter.sendLampState(lampState));
+            simpleLampView.setOnLampProgressChangeListener(lampProgress -> sendLampPresenter.sendLampProgress(lampProgress));
+
         } catch (final Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
@@ -89,7 +85,7 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
             pwm = service.openPwm(GPIO_PWM);
             // Always set frequency and initial duty cycle before enabling PWM
             pwm.setPwmFrequencyHz(1000 / PULSE_PERIOD_MS);
-            showLampProgress(0.5);
+            //showLampProgress(0.5);
             pwm.setEnabled(true);
         } catch (final Throwable e) {
             Log.e(TAG, "Error on PeripheralIO API", e);
@@ -104,35 +100,35 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
         lampComponent.inject(this);
     }
 
-    @Override
-    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_SPACE) {
-
-            Log.i(TAG, "GPIO changed, button pressed");
-            final boolean newLampState = !lampState;
-            showLampState(newLampState);
-            sendLampStatePresenter.sendLampState(newLampState);
-
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(final int keyCode, final KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_SPACE) {
+//
+//            Log.i(TAG, "GPIO changed, button pressed");
+//            final boolean newLampState = !lampState;
+//            showLampState(newLampState);
+//            sendLampPresenter.sendLampState(newLampState);
+//
+//            return true;
+//        }
+//
+//        return super.onKeyDown(keyCode, event);
+//    }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        listenLampStatePresenter.listenLampState();
-        listenLampStatePresenter.listenLampProgress();
+        listenLampPresenter.listenLampState();
+        listenLampPresenter.listenLampProgress();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onPause() {
+        super.onPause();
 
-        listenLampStatePresenter.destroy();
-        sendLampStatePresenter.destroy();
+        listenLampPresenter.destroy();
+        sendLampPresenter.destroy();
 
         if (pwm != null) {
             Log.i(TAG, "Closing Pwm GPIO pin");
@@ -168,40 +164,31 @@ public class BlinkActivity extends BaseComponentActivity implements ListenLampVi
         }
     }
 
-    @Override
-    public void showLampState(final Boolean lampState) {
-        this.lampState = lampState;
-        if (lampGpio != null) {
-            try {
-                lampGpio.setValue(lampState);
-                Log.d(TAG, "State set to " + lampState);
-            } catch (final IOException e) {
-                Log.e(TAG, "Error on PeripheralIO API", e);
-            }
-        }
+//    @Override
+//    public void showLampState(final Boolean lampState) {
+//        this.lampState = lampState;
+//        if (lampGpio != null) {
+//            try {
+//                lampGpio.setValue(lampState);
+//                Log.d(TAG, "State set to " + lampState);
+//            } catch (final IOException e) {
+//                Log.e(TAG, "Error on PeripheralIO API", e);
+//            }
+//        }
+//    }
 
-        if (switchCompat != null) {
-            switchCompat.setChecked(lampState);
-        }
-    }
+//    @Override
+//    public void showLampProgress(final Double lampProgress) {
+//        if (pwm != null && lampProgress != null) {
+//            try {
+//                final double pwmDutyCycle = MIN_ACTIVE_PULSE_DURATION_MS +
+//                        lampProgress * (PULSE_PERIOD_MS / 2 - MIN_ACTIVE_PULSE_DURATION_MS);
+//                pwm.setPwmDutyCycle(pwmDutyCycle);
+//                Log.d(TAG, String.format(Locale.ENGLISH, "Pwm:  Progress=%s  PwmDutyCycle=%s", lampProgress, pwmDutyCycle));
+//            } catch (final IOException e) {
+//                Log.e(TAG, "Error on PeripheralIO API", e);
+//            }
+//        }
+//    }
 
-    @Override
-    public void showLampProgress(final Double lampProgress) {
-        if (pwm != null && lampProgress != null) {
-            try {
-                final double pwmDutyCycle = MIN_ACTIVE_PULSE_DURATION_MS +
-                        lampProgress * (PULSE_PERIOD_MS / 2 - MIN_ACTIVE_PULSE_DURATION_MS);
-                pwm.setPwmDutyCycle(pwmDutyCycle);
-                Log.d(TAG, String.format(Locale.ENGLISH, "Pwm:  Progress=%s  PwmDutyCycle=%s", lampProgress, pwmDutyCycle));
-            } catch (final IOException e) {
-                Log.e(TAG, "Error on PeripheralIO API", e);
-            }
-        }
-    }
-
-    @Override
-    public void showErrorMessage(final CharSequence errorMessage) {
-        Log.e(TAG, "showErrorMessage: " + errorMessage);
-        Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show();
-    }
 }

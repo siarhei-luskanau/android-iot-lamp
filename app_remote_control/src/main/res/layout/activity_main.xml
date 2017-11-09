@@ -1,51 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<siarhei.luskanau.iot.lamp.view.SimpleLampView
+    android:id="@+id/simpleLampView"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:hint="Type here"
-        android:minHeight="64dp"/>
-
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/textInputLayout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:minHeight="64dp">
-
-        <EditText
-            android:id="@+id/editText"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:hint="Type here"/>
-
-    </android.support.design.widget.TextInputLayout>
-
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/switchCompat"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center_vertical"
-        android:minHeight="32dp"
-        android:padding="16dp"
-        android:text="@string/lamp"/>
-
-    <SeekBar
-        android:id="@+id/seekBar"
-        style="@style/Widget.AppCompat.SeekBar.Discrete"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:max="20"
-        android:minHeight="32dp"
-        android:progress="3"/>
-
-</LinearLayout>
+    />

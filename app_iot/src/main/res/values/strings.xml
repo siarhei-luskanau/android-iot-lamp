@@ -1,6 +1,5 @@
 <resources>
 
     <string name="app_name">Android Things IoT Lamp board</string>
-    <string name="lamp">Lamp</string>
 
 </resources>

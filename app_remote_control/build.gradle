@@ -36,7 +36,6 @@ dependencies {
     annotationProcessor remoteControlDependencies.daggerCompiler
     compile remoteControlDependencies.dagger
     compile remoteControlDependencies.javaxInject
-    compile remoteControlDependencies.supportDesign
 
     //Development
     debugCompile developmentDependencies.leakCanary

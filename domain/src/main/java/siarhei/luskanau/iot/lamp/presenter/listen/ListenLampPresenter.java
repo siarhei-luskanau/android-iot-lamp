@@ -56,6 +56,8 @@ public class ListenLampPresenter implements Presenter {
     @Override
     public void destroy() {
         this.listenLampStateUseCase.dispose();
+        this.listenLampProgressUseCase.dispose();
+        this.listenLampMessageUseCase.dispose();
         this.listenLampStateView = null;
     }
 

@@ -64,6 +64,8 @@ public class SendLampPresenter implements Presenter {
 
     public void destroy() {
         this.sendLampStateUseCase.dispose();
+        this.sendLampProgressUseCase.dispose();
+        this.sendLampMessageUseCase.dispose();
         this.sendLampStateView = null;
     }
 

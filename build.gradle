@@ -1,12 +1,18 @@
 apply from: 'dependencies.gradle'
 
 buildscript {
+    apply from: 'dependencies.gradle'
     repositories {
+        google()
         jcenter()
+        // used for 'com.jakewharton:butterknife-gradle-plugin:${}'
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0'
-        classpath 'com.google.gms:google-services:3.1.1'
+        def buildscriptDependencies = rootProject.ext.buildscriptDependencies
+        classpath buildscriptDependencies.gradle
+        classpath buildscriptDependencies.googleServices
+        classpath buildscriptDependencies.butterknifeGradlePlugin
     }
 }
 
