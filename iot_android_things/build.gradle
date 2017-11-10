@@ -5,7 +5,7 @@ android {
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion project.ANDROID_BUILD_MIN_SDK_VERSION
+        minSdkVersion project.ANDROID_THINGS_BUILD_MIN_SDK_VERSION
         targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION
     }
 
@@ -22,12 +22,7 @@ android {
 dependencies {
     def appDependencies = rootProject.ext.appDependencies
 
-    compile project(':domain')
-
-    compile appDependencies.firebaseDatabase
-    compile appDependencies.rx2firebase
+    provided appDependencies.androidThings
+    compile appDependencies.driverButton
+    compile appDependencies.driverPwmServo
 }
-
-// ADD THIS AT THE BOTTOM
-apply plugin: 'com.google.gms.google-services'
-

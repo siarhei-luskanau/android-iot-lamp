@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "siarhei.luskanau.iot.lamp.iot"
-        minSdkVersion 24
+        minSdkVersion project.ANDROID_THINGS_BUILD_MIN_SDK_VERSION
         targetSdkVersion project.ANDROID_BUILD_TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
@@ -26,22 +26,18 @@ android {
 }
 
 dependencies {
-    def iotDependencies = rootProject.ext.iotDependencies
-    def developmentDependencies = rootProject.ext.developmentDependencies
+    def appDependencies = rootProject.ext.appDependencies
 
     compile project(':domain')
     compile project(':data_firebase')
+    compile project(':iot_android_things')
 
-    annotationProcessor iotDependencies.daggerCompiler
-    compile iotDependencies.dagger
-    compile iotDependencies.javaxInject
-
-    provided iotDependencies.androidThings
-    compile iotDependencies.driverButton
-    compile iotDependencies.driverPwmServo
+    annotationProcessor appDependencies.daggerCompiler
+    compile appDependencies.dagger
+    compile appDependencies.javaxInject
 
     //Development
-    debugCompile developmentDependencies.leakCanary
-    releaseCompile developmentDependencies.leakCanaryNoOp
-    testCompile developmentDependencies.leakCanaryNoOp
+    debugCompile appDependencies.leakCanary
+    releaseCompile appDependencies.leakCanaryNoOp
+    testCompile appDependencies.leakCanaryNoOp
 }

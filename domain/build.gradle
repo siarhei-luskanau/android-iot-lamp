@@ -21,13 +21,13 @@ android {
 }
 
 dependencies {
-    def domainDependencies = rootProject.ext.domainDependencies
+    def appDependencies = rootProject.ext.appDependencies
 
-    compile domainDependencies.butterknife
-    annotationProcessor domainDependencies.butterknifeCompiler
+    compile appDependencies.butterknife
+    annotationProcessor appDependencies.butterknifeCompiler
 
-    compile domainDependencies.rxJava
-    compile domainDependencies.rxAndroid
-    compile domainDependencies.supportAnnotations
-    compile domainDependencies.supportDesign
+    compile appDependencies.rxJava
+    compile appDependencies.rxAndroid
+    compile appDependencies.supportAnnotations
+    compile appDependencies.supportDesign
 }

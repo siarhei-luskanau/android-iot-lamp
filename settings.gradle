@@ -1,4 +1,5 @@
 include ':domain'
 include ':data_firebase'
+include ':iot_android_things'
 include ':app_remote_control'
 include ':app_iot'
