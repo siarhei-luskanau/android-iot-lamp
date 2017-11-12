@@ -11,17 +11,22 @@ import siarhei.luskanau.iot.lamp.presenter.Presenter;
 
 public class ListenLampPresenter implements Presenter {
 
+    @NonNull
     private final ErrorMessageFactory errorMessageFactory;
+    @NonNull
     private final ListenLampStateUseCase listenLampStateUseCase;
+    @NonNull
     private final ListenLampProgressUseCase listenLampProgressUseCase;
+    @NonNull
     private final ListenLampMessageUseCase listenLampMessageUseCase;
+
     private ListenLampView listenLampStateView;
 
     public ListenLampPresenter(
-            final ErrorMessageFactory errorMessageFactory,
-            final ListenLampStateUseCase listenLampStateUseCase,
-            final ListenLampProgressUseCase listenLampProgressUseCase,
-            final ListenLampMessageUseCase listenLampMessageUseCase
+            @NonNull final ErrorMessageFactory errorMessageFactory,
+            @NonNull final ListenLampStateUseCase listenLampStateUseCase,
+            @NonNull final ListenLampProgressUseCase listenLampProgressUseCase,
+            @NonNull final ListenLampMessageUseCase listenLampMessageUseCase
     ) {
         this.errorMessageFactory = errorMessageFactory;
         this.listenLampStateUseCase = listenLampStateUseCase;

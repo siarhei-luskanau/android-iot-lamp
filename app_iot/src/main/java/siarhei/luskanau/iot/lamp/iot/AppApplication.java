@@ -1,13 +1,13 @@
 package siarhei.luskanau.iot.lamp.iot;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.squareup.leakcanary.LeakCanary;
 
 import siarhei.luskanau.iot.lamp.iot.dagger.component.ApplicationComponent;
 import siarhei.luskanau.iot.lamp.iot.dagger.component.DaggerApplicationComponent;
 import siarhei.luskanau.iot.lamp.iot.dagger.modules.ApplicationModule;
+import timber.log.Timber;
 
 public class AppApplication extends Application {
 
@@ -16,9 +16,11 @@ public class AppApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i(TAG, "Starting AppApplication");
+        Timber.i("Starting AppApplication");
         this.initializeInjector();
         this.initializeLeakDetection();
+
+        applicationComponent.subPeripheralComponent().peripheralUtils().openPeripheral();
     }
 
     private void initializeInjector() {
@@ -36,6 +38,4 @@ public class AppApplication extends Application {
             LeakCanary.install(this);
         }
     }
-
-    private static final String TAG = AppApplication.class.getSimpleName();
 }

@@ -11,17 +11,22 @@ import siarhei.luskanau.iot.lamp.presenter.Presenter;
 
 public class SendLampPresenter implements Presenter {
 
+    @NonNull
     private final ErrorMessageFactory errorMessageFactory;
+    @NonNull
     private final SendLampStateUseCase sendLampStateUseCase;
+    @NonNull
     private final SendLampProgressUseCase sendLampProgressUseCase;
+    @NonNull
     private final SendLampMessageUseCase sendLampMessageUseCase;
+
     private SendLampView sendLampStateView;
 
     public SendLampPresenter(
-            final ErrorMessageFactory errorMessageFactory,
-            final SendLampStateUseCase sendLampStateUseCase,
-            final SendLampProgressUseCase sendLampProgressUseCase,
-            final SendLampMessageUseCase sendLampMessageUseCase
+            @NonNull final ErrorMessageFactory errorMessageFactory,
+            @NonNull final SendLampStateUseCase sendLampStateUseCase,
+            @NonNull final SendLampProgressUseCase sendLampProgressUseCase,
+            @NonNull final SendLampMessageUseCase sendLampMessageUseCase
 
     ) {
         this.errorMessageFactory = errorMessageFactory;
@@ -52,7 +57,8 @@ public class SendLampPresenter implements Presenter {
         sendLampMessageUseCase.execute(
                 new SendLampObserver<>(),
                 SendLampMessageUseCase.Params.forLampMessage(lampMessage)
-        );   }
+        );
+    }
 
     @Override
     public void resume() {

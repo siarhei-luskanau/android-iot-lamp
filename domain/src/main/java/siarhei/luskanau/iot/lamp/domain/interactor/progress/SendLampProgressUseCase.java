@@ -2,8 +2,7 @@ package siarhei.luskanau.iot.lamp.domain.interactor.progress;
 
 import io.reactivex.Observable;
 import siarhei.luskanau.iot.lamp.domain.LampRepository;
-import siarhei.luskanau.iot.lamp.domain.executor.PostExecutionThread;
-import siarhei.luskanau.iot.lamp.domain.executor.ThreadExecutor;
+import siarhei.luskanau.iot.lamp.domain.executor.ISchedulerSet;
 import siarhei.luskanau.iot.lamp.domain.interactor.UseCase;
 
 public class SendLampProgressUseCase extends UseCase<Void, SendLampProgressUseCase.Params> {
@@ -12,10 +11,9 @@ public class SendLampProgressUseCase extends UseCase<Void, SendLampProgressUseCa
 
     public SendLampProgressUseCase(
             final LampRepository lampRepository,
-            final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread
+            final ISchedulerSet schedulerSet
     ) {
-        super(threadExecutor, postExecutionThread);
+        super(schedulerSet);
         this.lampRepository = lampRepository;
     }
 

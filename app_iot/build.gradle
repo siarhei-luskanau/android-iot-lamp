@@ -33,8 +33,6 @@ dependencies {
     compile project(':iot_android_things')
 
     annotationProcessor appDependencies.daggerCompiler
-    compile appDependencies.dagger
-    compile appDependencies.javaxInject
 
     //Development
     debugCompile appDependencies.leakCanary

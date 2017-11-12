@@ -22,6 +22,7 @@ ext {
     butterknifeVersion = '9.0.0-SNAPSHOT'
     daggerVersion = '2.11'
     javaxInjectVersion = '1'
+    timberVersion = '4.6.0'
     rxJavaVersion = '2.1.2'
     rxAndroidVersion = '2.0.1'
     rx2firebaseVersion = '1.1.3'
@@ -32,7 +33,8 @@ ext {
     //Android Things
     androidthingsVersion = '0.5.1-devpreview'
     driverButtonVersion = '0.4'
-    pwmservoVersion = '0.3'
+    driverPwmservoVersion = '0.3'
+    driverSsd1306Version = '0.5'
 
     buildscriptDependencies = [
             gradle                 : "com.android.tools.build:gradle:3.0.0",
@@ -49,6 +51,7 @@ ext {
             dagger             : "com.google.dagger:dagger:${daggerVersion}",
             javaxInject        : "javax.inject:javax.inject:${javaxInjectVersion}",
 
+            timber             : "com.jakewharton.timber:timber:${timberVersion}",
             supportAnnotations : "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}",
             supportDesign      : "com.android.support:design:${SUPPORT_LIBRARY_VERSION}",
 
@@ -58,9 +61,11 @@ ext {
             firebaseDatabase   : "com.google.firebase:firebase-database:${PLAY_SERVICES_VERSION}",
             rx2firebase        : "com.github.frangsierra:rx2firebase:${rx2firebaseVersion}",
 
+
             androidThings      : "com.google.android.things:androidthings:${androidthingsVersion}",
             driverButton       : "com.google.android.things.contrib:driver-button:${driverButtonVersion}",
-            driverPwmServo     : "com.google.android.things.contrib:driver-pwmservo:${pwmservoVersion}",
+            driverPwmServo     : "com.google.android.things.contrib:driver-pwmservo:${driverPwmservoVersion}",
+            driverSsd1306      : "com.google.android.things.contrib:driver-ssd1306:${driverSsd1306Version}",
 
             leakCanary         : "com.squareup.leakcanary:leakcanary-android:${leakCanaryVersion}",
             leakCanaryNoOp     : "com.squareup.leakcanary:leakcanary-android-no-op:${leakCanaryVersion}",

@@ -22,7 +22,12 @@ android {
 dependencies {
     def appDependencies = rootProject.ext.appDependencies
 
+    compile project(':domain')
+
+    annotationProcessor appDependencies.daggerCompiler
+
     provided appDependencies.androidThings
     compile appDependencies.driverButton
     compile appDependencies.driverPwmServo
+    compile appDependencies.driverSsd1306
 }

@@ -6,8 +6,6 @@ import javax.inject.Inject;
 
 import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampPresenter;
 import siarhei.luskanau.iot.lamp.presenter.send.SendLampPresenter;
-import siarhei.luskanau.iot.lamp.remote.control.dagger.component.DaggerLampComponent;
-import siarhei.luskanau.iot.lamp.remote.control.dagger.component.LampComponent;
 import siarhei.luskanau.iot.lamp.view.SimpleLampView;
 
 public class MainActivity extends BaseComponentActivity {
@@ -21,7 +19,7 @@ public class MainActivity extends BaseComponentActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.initializeInjector();
+        getApplicationComponent().subLampComponent().inject(this);
 
         final SimpleLampView simpleLampView = findViewById(R.id.simpleLampView);
 
@@ -30,14 +28,6 @@ public class MainActivity extends BaseComponentActivity {
 
         simpleLampView.setOnLampStateChangeListener(lampState -> sendLampPresenter.sendLampState(lampState));
         simpleLampView.setOnLampProgressChangeListener(lampProgress -> sendLampPresenter.sendLampProgress(lampProgress));
-    }
-
-    private void initializeInjector() {
-        final LampComponent lampComponent = DaggerLampComponent.builder()
-                .applicationComponent(getApplicationComponent())
-                .activityModule(getActivityModule())
-                .build();
-        lampComponent.inject(this);
     }
 
     @Override

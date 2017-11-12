@@ -19,9 +19,7 @@ import io.reactivex.Observable;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
-import siarhei.luskanau.iot.lamp.domain.executor.PostExecutionThread;
-import siarhei.luskanau.iot.lamp.domain.executor.ThreadExecutor;
+import siarhei.luskanau.iot.lamp.domain.executor.ISchedulerSet;
 
 /**
  * Abstract class for a Use Case (Interactor in terms of Clean Architecture).
@@ -33,14 +31,11 @@ import siarhei.luskanau.iot.lamp.domain.executor.ThreadExecutor;
  */
 public abstract class UseCase<T, Params> {
 
-    private final ThreadExecutor threadExecutor;
-    private final PostExecutionThread postExecutionThread;
+    private final ISchedulerSet schedulerSet;
     private final CompositeDisposable disposables;
 
-    public UseCase(final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread) {
-        this.threadExecutor = threadExecutor;
-        this.postExecutionThread = postExecutionThread;
+    public UseCase(final ISchedulerSet schedulerSet) {
+        this.schedulerSet = schedulerSet;
         this.disposables = new CompositeDisposable();
     }
 
@@ -58,8 +53,8 @@ public abstract class UseCase<T, Params> {
      */
     public void execute(final DisposableObserver<T> observer, final Params params) {
         final Observable<T> observable = this.buildUseCaseObservable(params)
-                .subscribeOn(Schedulers.from(threadExecutor))
-                .observeOn(postExecutionThread.getScheduler());
+                .subscribeOn(schedulerSet.subscribeOn())
+                .observeOn(schedulerSet.observeOn());
         addDisposable(observable.subscribeWith(observer));
     }
 

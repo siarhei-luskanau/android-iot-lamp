@@ -1,11 +1,15 @@
 package siarhei.luskanau.iot.lamp.iot.dagger.modules;
 
+import android.support.annotation.NonNull;
+
 import dagger.Module;
 import dagger.Provides;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import siarhei.luskanau.iot.lamp.domain.LampRepository;
 import siarhei.luskanau.iot.lamp.domain.exception.ErrorMessageFactory;
-import siarhei.luskanau.iot.lamp.domain.executor.PostExecutionThread;
-import siarhei.luskanau.iot.lamp.domain.executor.ThreadExecutor;
+import siarhei.luskanau.iot.lamp.domain.executor.ISchedulerSet;
 import siarhei.luskanau.iot.lamp.domain.interactor.message.ListenLampMessageUseCase;
 import siarhei.luskanau.iot.lamp.domain.interactor.message.SendLampMessageUseCase;
 import siarhei.luskanau.iot.lamp.domain.interactor.progress.ListenLampProgressUseCase;
@@ -19,89 +23,106 @@ import siarhei.luskanau.iot.lamp.presenter.send.SendLampPresenter;
 public class LampModule {
 
     @Provides
+    @NonNull
+    ISchedulerSet provideSchedulerSet() {
+        return new ISchedulerSet() {
+
+            private final Scheduler subscribeOn = Schedulers.io();
+            private final Scheduler observeOn = AndroidSchedulers.mainThread();
+
+            @Override
+            @NonNull
+            public Scheduler subscribeOn() {
+                return subscribeOn;
+            }
+
+            @Override
+            @NonNull
+            public Scheduler observeOn() {
+                return observeOn;
+            }
+        };
+    }
+
+    @Provides
+    @NonNull
     ListenLampStateUseCase provideListenLampStateUseCase(
-            final LampRepository lampRepository,
-            final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread
+            @NonNull final LampRepository lampRepository,
+            @NonNull final ISchedulerSet schedulerSet
     ) {
         return new ListenLampStateUseCase(
                 lampRepository,
-                threadExecutor,
-                postExecutionThread
+                schedulerSet
         );
     }
 
     @Provides
+    @NonNull
     ListenLampProgressUseCase provideListenLampProgressUseCase(
-            final LampRepository lampRepository,
-            final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread
+            @NonNull final LampRepository lampRepository,
+            @NonNull final ISchedulerSet schedulerSet
     ) {
         return new ListenLampProgressUseCase(
                 lampRepository,
-                threadExecutor,
-                postExecutionThread
+                schedulerSet
         );
     }
 
     @Provides
+    @NonNull
     ListenLampMessageUseCase provideListenLampMessageUseCase(
-            final LampRepository lampRepository,
-            final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread
+            @NonNull final LampRepository lampRepository,
+            @NonNull final ISchedulerSet schedulerSet
     ) {
         return new ListenLampMessageUseCase(
                 lampRepository,
-                threadExecutor,
-                postExecutionThread
+                schedulerSet
         );
     }
 
     @Provides
+    @NonNull
     SendLampStateUseCase provideSendLampStateUseCase(
-            final LampRepository lampRepository,
-            final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread
+            @NonNull final LampRepository lampRepository,
+            @NonNull final ISchedulerSet schedulerSet
     ) {
         return new SendLampStateUseCase(
                 lampRepository,
-                threadExecutor,
-                postExecutionThread
+                schedulerSet
         );
     }
 
     @Provides
+    @NonNull
     SendLampProgressUseCase provideSendLampProgressUseCase(
-            final LampRepository lampRepository,
-            final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread
+            @NonNull final LampRepository lampRepository,
+            @NonNull final ISchedulerSet schedulerSet
     ) {
         return new SendLampProgressUseCase(
                 lampRepository,
-                threadExecutor,
-                postExecutionThread
+                schedulerSet
         );
     }
 
     @Provides
+    @NonNull
     SendLampMessageUseCase provideSendLampMessageUseCase(
-            final LampRepository lampRepository,
-            final ThreadExecutor threadExecutor,
-            final PostExecutionThread postExecutionThread
+            @NonNull final LampRepository lampRepository,
+            @NonNull final ISchedulerSet schedulerSet
     ) {
         return new SendLampMessageUseCase(
                 lampRepository,
-                threadExecutor,
-                postExecutionThread
+                schedulerSet
         );
     }
 
     @Provides
+    @NonNull
     ListenLampPresenter provideListenLampStatePresenter(
-            final ErrorMessageFactory errorMessageFactory,
-            final ListenLampStateUseCase listenLampStateUseCase,
-            final ListenLampProgressUseCase listenLampProgressUseCase,
-            final ListenLampMessageUseCase listenLampMessageUseCase
+            @NonNull final ErrorMessageFactory errorMessageFactory,
+            @NonNull final ListenLampStateUseCase listenLampStateUseCase,
+            @NonNull final ListenLampProgressUseCase listenLampProgressUseCase,
+            @NonNull final ListenLampMessageUseCase listenLampMessageUseCase
     ) {
         return new ListenLampPresenter(
                 errorMessageFactory,
@@ -112,11 +133,12 @@ public class LampModule {
     }
 
     @Provides
+    @NonNull
     SendLampPresenter provideSendLampStatePresenter(
-            final ErrorMessageFactory errorMessageFactory,
-            final SendLampStateUseCase sendLampStateUseCase,
-            final SendLampProgressUseCase sendLampProgressUseCase,
-            final SendLampMessageUseCase sendLampMessageUseCase
+            @NonNull final ErrorMessageFactory errorMessageFactory,
+            @NonNull final SendLampStateUseCase sendLampStateUseCase,
+            @NonNull final SendLampProgressUseCase sendLampProgressUseCase,
+            @NonNull final SendLampMessageUseCase sendLampMessageUseCase
     ) {
         return new SendLampPresenter(
                 errorMessageFactory,
