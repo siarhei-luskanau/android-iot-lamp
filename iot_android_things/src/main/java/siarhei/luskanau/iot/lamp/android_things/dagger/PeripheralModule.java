@@ -28,7 +28,7 @@ public class PeripheralModule {
     ISchedulerSet provideSchedulerSet() {
         return new ISchedulerSet() {
 
-            private final Scheduler subscribeOn = Schedulers.computation();
+            private final Scheduler subscribeOn = Schedulers.io();
             private final Scheduler observeOn = Schedulers.computation();
 
             @Override
