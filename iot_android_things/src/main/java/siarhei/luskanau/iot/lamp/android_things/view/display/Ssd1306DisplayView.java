@@ -40,11 +40,11 @@ public class Ssd1306DisplayView implements IDisplayView {
     }
 
     public void open() {
-        testI2cDevices();
         try {
+            testI2cDevices();
             ssd1306 = new Ssd1306(getI2cName());
-        } catch (final Exception e) {
-            Timber.e(e);
+        } catch (final Throwable t) {
+            Timber.e(t);
         }
 
         listenLampMessageUseCase.execute(
