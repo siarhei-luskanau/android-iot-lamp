@@ -2,42 +2,43 @@ package siarhei.luskanau.iot.lamp.view.base;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.util.AttributeSet;
-import android.view.View;
+import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 
-import butterknife.ButterKnife;
+public abstract class DataBindingView<T extends ViewDataBinding> extends FrameLayout {
 
-public abstract class InflateFrameLayout extends FrameLayout {
+    protected T binding;
 
-    public InflateFrameLayout(final Context context) {
+    public DataBindingView(final Context context) {
         super(context);
         init(context, null);
     }
 
-    public InflateFrameLayout(final Context context, final AttributeSet attrs) {
+    public DataBindingView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init(context, attrs);
     }
 
-    public InflateFrameLayout(final Context context, final AttributeSet attrs, final int defStyleAttr) {
+    public DataBindingView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs);
     }
 
     @SuppressWarnings("unused")
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public InflateFrameLayout(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
+    public DataBindingView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
     }
 
     protected void init(final Context context, final AttributeSet attrs) {
-        final View view = View.inflate(context, getViewLayout(), this);
+        binding = DataBindingUtil.inflate(LayoutInflater.from(getContext()), getViewLayout(), this, true);
 
-        ButterKnife.bind(this, view);
         applyAttributes(context, attrs);
 
         onViewCreated(context);

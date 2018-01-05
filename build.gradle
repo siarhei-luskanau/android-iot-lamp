@@ -12,7 +12,6 @@ buildscript {
         def buildscriptDependencies = rootProject.ext.buildscriptDependencies
         classpath buildscriptDependencies.gradle
         classpath buildscriptDependencies.googleServices
-        classpath buildscriptDependencies.butterknifeGradlePlugin
     }
 }
 

@@ -3,25 +3,18 @@ package siarhei.luskanau.iot.lamp.view;
 import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.SwitchCompat;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.SeekBar;
 import android.widget.Toast;
 
-import butterknife.BindView;
 import siarhei.luskanau.iot.lamp.domain.R;
-import siarhei.luskanau.iot.lamp.domain.R2;
+import siarhei.luskanau.iot.lamp.domain.databinding.ViewSimpleLampViewBinding;
 import siarhei.luskanau.iot.lamp.presenter.listen.ListenLampView;
 import siarhei.luskanau.iot.lamp.presenter.send.SendLampView;
-import siarhei.luskanau.iot.lamp.view.base.InflateFrameLayout;
+import siarhei.luskanau.iot.lamp.view.base.DataBindingView;
 
-public class SimpleLampView extends InflateFrameLayout implements ListenLampView, SendLampView {
-
-    @BindView(R2.id.switchCompat)
-    protected SwitchCompat switchCompat;
-    @BindView(R2.id.seekBar)
-    protected SeekBar seekBar;
+public class SimpleLampView extends DataBindingView<ViewSimpleLampViewBinding> implements ListenLampView, SendLampView {
 
     private OnLampStateChangeListener onLampStateChangeListener;
     private OnLampProgressChangeListener onLampProgressChangeListener;
@@ -47,14 +40,14 @@ public class SimpleLampView extends InflateFrameLayout implements ListenLampView
     protected void onViewCreated(final Context context) {
         super.onViewCreated(context);
 
-        switchCompat.setOnClickListener(v -> {
+        binding.switchCompat.setOnClickListener(v -> {
             final boolean isChecked = ((Checkable) v).isChecked();
             if (onLampStateChangeListener != null) {
                 onLampStateChangeListener.onLampStateChanged(isChecked);
             }
         });
 
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        binding.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             @Override
             public void onProgressChanged(final SeekBar seekBar, final int progress, final boolean fromUser) {
@@ -91,15 +84,15 @@ public class SimpleLampView extends InflateFrameLayout implements ListenLampView
 
     @Override
     public void showLampState(final Boolean lampState) {
-        if (switchCompat != null) {
-            switchCompat.setChecked(lampState);
+        if (binding.switchCompat != null) {
+            binding.switchCompat.setChecked(lampState);
         }
     }
 
     @Override
     public void showLampProgress(final Double lampProgress) {
-        if (seekBar != null && lampProgress != null) {
-            seekBar.setProgress((int) (lampProgress * seekBar.getMax()));
+        if (binding.seekBar != null && lampProgress != null) {
+            binding.seekBar.setProgress((int) (lampProgress * binding.seekBar.getMax()));
         }
     }
 
