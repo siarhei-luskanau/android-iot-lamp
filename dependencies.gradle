@@ -17,6 +17,7 @@ ext {
     PLAY_SERVICES_VERSION = "11.8.0"
 
     //Libraries
+    kotlinVersion = '1.2.0'
     daggerVersion = '2.14.1'
     javaxInjectVersion = '1'
     timberVersion = '4.6.0'
@@ -34,11 +35,14 @@ ext {
     driverSsd1306Version = '0.5'
 
     buildscriptDependencies = [
-            gradle        : "com.android.tools.build:gradle:3.0.1",
-            googleServices: "com.google.gms:google-services:3.1.2",
+            gradle            : "com.android.tools.build:gradle:3.0.1",
+            kotlinGradlePlugin: "org.jetbrains.kotlin:kotlin-gradle-plugin:${kotlinVersion}",
+            googleServices    : "com.google.gms:google-services:3.1.2",
     ]
 
     appDependencies = [
+
+            kotlinStdlib      : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${kotlinVersion}",
 
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",

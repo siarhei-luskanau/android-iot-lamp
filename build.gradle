@@ -5,12 +5,11 @@ buildscript {
     repositories {
         google()
         jcenter()
-        // used for 'com.jakewharton:butterknife-gradle-plugin:${}'
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
         def buildscriptDependencies = rootProject.ext.buildscriptDependencies
         classpath buildscriptDependencies.gradle
+        classpath buildscriptDependencies.kotlinGradlePlugin
         classpath buildscriptDependencies.googleServices
     }
 }
