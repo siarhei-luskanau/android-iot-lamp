@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.google.android.things.contrib.driver.ssd1306.BitmapHelper;
 import com.google.android.things.contrib.driver.ssd1306.Ssd1306;
 import com.google.android.things.pio.I2cDevice;
-import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
 import java.util.List;
@@ -83,8 +83,8 @@ public class Ssd1306DisplayView implements IDisplayView {
     }
 
     private String getI2cName() {
-        final PeripheralManagerService peripheralManagerService = new PeripheralManagerService();
-        final List<String> deviceList = peripheralManagerService.getI2cBusList();
+        final PeripheralManager peripheralManager = PeripheralManager.getInstance();
+        final List<String> deviceList = peripheralManager.getI2cBusList();
         final String bus;
         if (deviceList.isEmpty()) {
             bus = "I2C1";
@@ -118,13 +118,13 @@ public class Ssd1306DisplayView implements IDisplayView {
     }
 
     private void testI2cDevices() {
-        final PeripheralManagerService peripheralManagerService = new PeripheralManagerService();
+        final PeripheralManager peripheralManager = PeripheralManager.getInstance();
         final int TEST_REGISTER = 0x0;
         final int MAX_ADDRESS = 256;
         for (int address = 0; address < MAX_ADDRESS; address++) {
 
-            //auto-close the devices
-            try (final I2cDevice device = peripheralManagerService.openI2cDevice("I2C1", address)) {
+            try {
+                final I2cDevice device = peripheralManager.openI2cDevice("I2C1", address);
 
                 try {
                     device.readRegByte(TEST_REGISTER);
@@ -133,6 +133,7 @@ public class Ssd1306DisplayView implements IDisplayView {
                     Timber.i("Trying: 0x%02X - FAIL", address);
                 }
 
+                device.close();
             } catch (final IOException e) {
                 //in case the openI2cDevice(name, address) fails
                 Timber.e(e);

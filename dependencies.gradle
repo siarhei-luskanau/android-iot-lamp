@@ -17,22 +17,21 @@ ext {
     PLAY_SERVICES_VERSION = "11.8.0"
 
     //Libraries
-    kotlinVersion = '1.2.0'
-    daggerVersion = '2.14.1'
-    javaxInjectVersion = '1'
-    timberVersion = '4.6.0'
-    rxJavaVersion = '2.1.8'
-    rxAndroidVersion = '2.0.1'
-    rx2firebaseVersion = '1.1.3'
+    kotlinVersion = '1.2.30'
+    daggerVersion = '2.15'
+    timberVersion = '4.6.1'
+    rxJavaVersion = '2.1.11'
+    rxAndroidVersion = '2.0.2'
+    rx2firebaseVersion = '1.4.1'
 
     //Development
     leakCanaryVersion = '1.5.4'
 
     //Android Things
-    androidthingsVersion = '0.6.1-devpreview'
-    driverButtonVersion = '0.5'
-    driverPwmservoVersion = '0.3'
-    driverSsd1306Version = '0.5'
+    androidthingsVersion = '0.7-devpreview'
+    driverButtonVersion = '0.6'
+    driverPwmservoVersion = '0.4'
+    driverSsd1306Version = '0.6'
 
     buildscriptDependencies = [
             gradle            : "com.android.tools.build:gradle:3.0.1",
@@ -46,7 +45,6 @@ ext {
 
             daggerCompiler    : "com.google.dagger:dagger-compiler:${daggerVersion}",
             dagger            : "com.google.dagger:dagger:${daggerVersion}",
-            javaxInject       : "javax.inject:javax.inject:${javaxInjectVersion}",
 
             timber            : "com.jakewharton.timber:timber:${timberVersion}",
             supportAnnotations: "com.android.support:support-annotations:${SUPPORT_LIBRARY_VERSION}",

@@ -2,7 +2,7 @@ package siarhei.luskanau.iot.lamp.android_things.view;
 
 import android.support.annotation.NonNull;
 
-import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.PeripheralManager;
 import com.google.android.things.pio.Pwm;
 
 import java.io.IOException;
@@ -28,8 +28,8 @@ public class PwmGpioView {
 
     public void open() {
         try {
-            final PeripheralManagerService service = new PeripheralManagerService();
-            pwm = service.openPwm(GPIO_PWM);
+            final PeripheralManager peripheralManager = PeripheralManager.getInstance();
+            pwm = peripheralManager.openPwm(GPIO_PWM);
             // Always set frequency and initial duty cycle before enabling PWM
             pwm.setPwmFrequencyHz(1000 / PULSE_PERIOD_MS);
             //showLampProgress(0.5);

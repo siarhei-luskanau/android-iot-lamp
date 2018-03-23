@@ -30,7 +30,6 @@ dependencies {
     compile appDependencies.kotlinStdlib
 
     compile appDependencies.dagger
-    compile appDependencies.javaxInject
 
     compile appDependencies.rxJava
     compile appDependencies.rxAndroid

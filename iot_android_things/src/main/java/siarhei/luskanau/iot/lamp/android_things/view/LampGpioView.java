@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.android.things.pio.Gpio;
-import com.google.android.things.pio.PeripheralManagerService;
+import com.google.android.things.pio.PeripheralManager;
 
 import java.io.IOException;
 
@@ -27,8 +27,8 @@ public class LampGpioView {
 
     public void open() {
         try {
-            final PeripheralManagerService service = new PeripheralManagerService();
-            lampGpio = service.openGpio(GPIO_LAMP);
+            final PeripheralManager peripheralManager = PeripheralManager.getInstance();
+            lampGpio = peripheralManager.openGpio(GPIO_LAMP);
             lampGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW);
             Timber.i("Start blinking LED GPIO pin");
         } catch (final Throwable e) {
